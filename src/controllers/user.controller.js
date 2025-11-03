@@ -5,7 +5,7 @@ const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expires
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password,contactNumber } = req.body;
+    const { name, email, password, contactNumber } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
@@ -44,3 +44,36 @@ export const login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// export const checkEmail = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+
+//     if (!email) {
+//       return res.status(400).json({ message: "Email is required" });
+//     }
+//     const user = await User.findOne({ email });
+//     res.status(200).json({ exists: !!user });
+//   } catch (error) {
+//     console.error("Error checking email:", error);
+//     res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
+
+
+export const checkEmail = async (req, res) => {
+  try {
+    const {email} = req.body;
+    const user = await User.findOne({ email })
+        if (user) {
+      res.status(200).json({ exists: true });
+    } else {
+      res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+
+
+  }
+}  
